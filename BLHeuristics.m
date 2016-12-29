@@ -1,3 +1,4 @@
+load('map_for_test.mat');
 lines = map2line(map);
 corners = findcorner(lines);
 
@@ -24,8 +25,9 @@ ncorner = size(corners,2);
 
 Rmin = 10;
 
-theta_list = [pi/4];
+theta_list = [pi];
 Hmap = zeros(size(map));%,max(size(theta_list)));
+perp = [0 1;-1 0];
 for i = 1:max(size(theta_list))
     theta = theta_list(i);
     vec = [cos(theta),sin(theta)];
@@ -34,7 +36,8 @@ for i = 1:max(size(theta_list))
             thick = Rmin*(1-abs(dot([cos(theta-pi/2),sin(theta-pi/2)],lines{j}.nvec)));
             for ii = 1:round(thick)
                 for jj = 0:norm(lines{j}.p1-lines{j}.p2)
-                    point = lines{j}.p2 + ii*lines{j}.nvec + jj*lines{j}.tvec;
+                    shift = round(vec*perp*lines{j}.nvec)*ii;
+                    point = lines{j}.p2 + ii*lines{j}.nvec + (jj+shift)*lines{j}.tvec;
                     O1 = point + Rmin*[-sin(theta);cos(theta)];
                     O2 = point + Rmin*[sin(theta);-cos(theta)];
                     if point(1) <= 100 && point(2) <= 100 && point(1) >= 1 && point(2) >= 1
@@ -42,12 +45,21 @@ for i = 1:max(size(theta_list))
                         if dot(lines{j}.tvec,(O1-lines{j}.p2)) < 0 && norm(O1-lines{j}.p2) > Rmin
                             continue;
                         end
+                        else
+                            if jj<-shift 
+                                continue;
+                            end
                         end
                         if critical_points(lines{j}.p1(1),lines{j}.p1(2)) < 2
                         if dot(lines{j}.tvec,(lines{j}.p1 - O2)) < 0 && norm(O2-lines{j}.p1) > Rmin
                             continue;
                         end
+                        else
+                            if jj>norm(lines{j}.p1-lines{j}.p2)-shift
+                                continue;
+                            end
                         end
+                        
                         Hmap(point(1),point(2)) = 10;
                         plot(point(1),point(2),'.k','MarkerSize',5)
                     end
