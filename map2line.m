@@ -26,7 +26,7 @@ while k < size(k_list,1)
     while k < size(k_list,1) && dot([x(k_list(k+1));y(k_list(k+1))] - p1, nvec) == 0
         k = k+1;
     end
-    if k - k0 < 2
+    if k - k0 < 2 && nline > 1
         nline = nline - 1;
         lines{nline}.p2 = lines{nline}.p2 + [x(k_list(k0));y(k_list(k0))] - [x(k_list(k0-1));y(k_list(k0-1))];
         k = k0 + 1;
