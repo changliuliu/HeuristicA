@@ -1,4 +1,4 @@
-function [Hmap,lines,corners] = BLHeuristics(map,Rmin,theta_list)
+function [Hmap,lines,corners] = BLHeuristics(map,Rmin,theta_list,box_flag)
 mapsize = size(map);
 % Find all of connected obstacles
 CC = bwconncomp(map);
@@ -27,6 +27,51 @@ for i=1:CC.NumObjects
     end
     lines = [lines line];
     corners = [corners corner];
+end
+if box_flag
+    lines{end+1}.p1 = [1;mapsize(2)];
+    lines{end}.p2 = [1;1];
+    lines{end}.tvec = [0;1];
+    lines{end}.nvec = [1;0];
+    
+    lines{end+1}.p1 = [1;1];
+    lines{end}.p2 = [mapsize(1);1];
+    lines{end}.tvec = [-1;0];
+    lines{end}.nvec = [0;1];
+    
+    lines{end+1}.p1 = [mapsize(1);1];
+    lines{end}.p2 = [mapsize(1);mapsize(2)];
+    lines{end}.tvec = [0;-1];
+    lines{end}.nvec = [-1;0];
+    
+    lines{end+1}.p1 = [mapsize(1);mapsize(2)];
+    lines{end}.p2 = [1;mapsize(2)];
+    lines{end}.tvec = [1;0];
+    lines{end}.nvec = [0;-1];
+    
+    corners{end+1}.p = [1;1];
+    corners{end}.n1 = [1;0];
+    corners{end}.n2 = [0;1];
+    corners{end}.l1 = mapsize(2);
+    corners{end}.l2 = mapsize(1);
+    
+    corners{end+1}.p = [mapsize(1);1];
+    corners{end}.n1 = [0;1];
+    corners{end}.n2 = [-1;0];
+    corners{end}.l1 = mapsize(1);
+    corners{end}.l2 = mapsize(2);
+    
+    corners{end+1}.p = [mapsize(1);mapsize(2)];
+    corners{end}.n1 = [-1;0];
+    corners{end}.n2 = [0;-1];
+    corners{end}.l1 = mapsize(2);
+    corners{end}.l2 = mapsize(1);
+    
+    corners{end+1}.p = [1;mapsize(2)];
+    corners{end}.n1 = [0;-1];
+    corners{end}.n2 = [1;0];
+    corners{end}.l1 = mapsize(1);
+    corners{end}.l2 = mapsize(2);
 end
 
 nline = size(lines,2);

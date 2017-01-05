@@ -15,7 +15,7 @@ else
 end
 k_list = boundary(x,y,1);
 %plot(x(k_list),y(k_list))
-
+mapsize = size(map);
 lines = {}; nline = 0;
 perp = [0 -1;1 0];
 k = 1; p1 = [x(k_list(k));y(k_list(k))];
@@ -23,7 +23,17 @@ while k < size(k_list,1)
     nline = nline + 1;
     vec = [x(k_list(k+1));y(k_list(k+1))] - [x(k_list(k));y(k_list(k))];
     k0 = k;
-    if map(x(k_list(k))-vec(2),y(k_list(k))+vec(1)) > map(x(k_list(k))+vec(2),y(k_list(k))-vec(1))
+    if x(k_list(k))-vec(2) > 0 && x(k_list(k))-vec(2) <= mapsize(1) && y(k_list(k))+vec(1) > 0 && y(k_list(k))+vec(1) <= mapsize(2)
+        n1 = map(x(k_list(k))-vec(2),y(k_list(k))+vec(1));
+    else
+        n1 = 0;
+    end
+    if x(k_list(k))+vec(2) > 0 && x(k_list(k))+vec(2) <= mapsize(1) && y(k_list(k))-vec(1) > 0 && y(k_list(k))-vec(1) <= mapsize(2)
+        n2 = map(x(k_list(k))+vec(2),y(k_list(k))-vec(1));
+    else
+        n2 = 0;
+    end
+    if n1 > n2
         nvec = perp'*vec;
     else
         nvec = perp*vec;
@@ -31,7 +41,7 @@ while k < size(k_list,1)
     while k < size(k_list,1) && dot([x(k_list(k+1));y(k_list(k+1))] - p1, nvec) == 0
         k = k+1;
     end
-    if k - k0 < 2 && nline > 1
+    if k - k0 < 2 && nline > 1 && dot(nvec,lines{nline-1}.nvec)>0
         nline = nline - 1;
         lines{nline}.p2 = lines{nline}.p2 + [x(k_list(k0));y(k_list(k0))] - [x(k_list(k0-1));y(k_list(k0-1))];
         k = k0 + 1;

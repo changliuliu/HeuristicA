@@ -1,10 +1,11 @@
 %% Setup Paramters
-map = load('grid_worlds/maze.csv');
+map = load('grid_worlds/twenty_by_forty.csv');
 Rmin = 10;
 theta_list = [0.0, 26.565, 45.0, 63.435, 90.0, 116.565, 135.0, 153.435, 180.0, 206.565, 225.0, 243.435, 270.0, 296.565, 315.0, 333.435] / 180 * pi;
 
+box_flag = 1;% Whether to view the boarder of the map as walls
 %% Compute the BLHeuristics
-[Hmap,lines,corners] = BLHeuristics(map,Rmin,theta_list);
+[Hmap,lines,corners] = BLHeuristics(map,Rmin,theta_list,box_flag);
 
 %% Write to csv file
 % e.g. 40 * 80 grid cell with 16 angles 
@@ -23,6 +24,8 @@ filename = 'bl_heuristic.csv';
 csvwrite(filename,Hmap);
 
 %% Visualize
-theta_index = 1;
+for theta_index = 1:1
 mapsize = size(map);
 vis_BLH(lines, corners, Hmap, theta_index, mapsize)
+pause(1)
+end
