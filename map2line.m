@@ -1,12 +1,17 @@
-function lines = map2line(map)
-x = []; y = [];
-for i=1:size(map,1)
-    for j=1:size(map,2)
-        if map(i,j)>0
-            x = [x;i];
-            y = [y;j];
+function lines = map2line(map,varargin)
+if isempty(varargin)
+    x = []; y = [];
+    for i=1:size(map,1)
+        for j=1:size(map,2)
+            if map(i,j)>0
+                x = [x;i];
+                y = [y;j];
+            end
         end
     end
+else
+    x = varargin{1};
+    y = varargin{2};
 end
 k_list = boundary(x,y,1);
 %plot(x(k_list),y(k_list))

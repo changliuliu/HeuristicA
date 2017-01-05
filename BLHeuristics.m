@@ -7,13 +7,16 @@ corners = {};
 critical_points = zeros(mapsize);
 for i=1:CC.NumObjects
     submap = zeros(mapsize);
+    xlist = []; ylist = [];
     for k = 1:length(CC.PixelIdxList{i})
         index_i = mod(CC.PixelIdxList{i}(k)-1, mapsize(1))+1;
         index_j = floor((CC.PixelIdxList{i}(k)-1)/mapsize(1))+1;
+        xlist = [xlist;index_i];
+        ylist = [ylist;index_j];
         submap(index_i,index_j) = 1;
     end
     % Find lines and corners in the map
-    line = map2line(submap);
+    line = map2line(submap,xlist,ylist);
     corner = findcorner(line);
     for k = 1:size(line,2)
         critical_points(line{k}.p1(1),line{k}.p1(2)) = 1;
@@ -31,7 +34,7 @@ ncorner = size(corners,2);
 Hmap = zeros(mapsize(1)*mapsize(2),length(theta_list));
 perp = [0 1;-1 0];
 for i = 1:max(size(theta_list))
-    theta = theta_list(i);
+    theta = pi/2 - theta_list(i);
     vec = [cos(theta),sin(theta)];
     for j = 1:nline
         if dot(vec,lines{j}.nvec) < 0
