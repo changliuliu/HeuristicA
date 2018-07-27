@@ -29,45 +29,45 @@ for i=1:CC.NumObjects
     corners = [corners corner];
 end
 if box_flag
-    lines{end+1}.p1 = [1;mapsize(2)];
-    lines{end}.p2 = [1;1];
+    lines{end+1}.p1 = [0;mapsize(2)+1];
+    lines{end}.p2 = [0;0];
     lines{end}.tvec = [0;1];
     lines{end}.nvec = [1;0];
     
-    lines{end+1}.p1 = [1;1];
-    lines{end}.p2 = [mapsize(1);1];
+    lines{end+1}.p1 = [0;0];
+    lines{end}.p2 = [mapsize(1)+1;0];
     lines{end}.tvec = [-1;0];
     lines{end}.nvec = [0;1];
     
-    lines{end+1}.p1 = [mapsize(1);1];
-    lines{end}.p2 = [mapsize(1);mapsize(2)];
+    lines{end+1}.p1 = [mapsize(1)+1;0];
+    lines{end}.p2 = [mapsize(1)+1;mapsize(2)+1];
     lines{end}.tvec = [0;-1];
     lines{end}.nvec = [-1;0];
     
-    lines{end+1}.p1 = [mapsize(1);mapsize(2)];
-    lines{end}.p2 = [1;mapsize(2)];
+    lines{end+1}.p1 = [mapsize(1)+1;mapsize(2)+1];
+    lines{end}.p2 = [0;mapsize(2)+1];
     lines{end}.tvec = [1;0];
     lines{end}.nvec = [0;-1];
     
-    corners{end+1}.p = [1;1];
+    corners{end+1}.p = [0;0];
     corners{end}.n1 = [1;0];
     corners{end}.n2 = [0;1];
     corners{end}.l1 = mapsize(2);
     corners{end}.l2 = mapsize(1);
     
-    corners{end+1}.p = [mapsize(1);1];
+    corners{end+1}.p = [mapsize(1)+1;0];
     corners{end}.n1 = [0;1];
     corners{end}.n2 = [-1;0];
     corners{end}.l1 = mapsize(1);
     corners{end}.l2 = mapsize(2);
     
-    corners{end+1}.p = [mapsize(1);mapsize(2)];
+    corners{end+1}.p = [mapsize(1)+1;mapsize(2)+1];
     corners{end}.n1 = [-1;0];
     corners{end}.n2 = [0;-1];
     corners{end}.l1 = mapsize(2);
     corners{end}.l2 = mapsize(1);
     
-    corners{end+1}.p = [1;mapsize(2)];
+    corners{end+1}.p = [0;mapsize(2)+1];
     corners{end}.n1 = [0;-1];
     corners{end}.n2 = [1;0];
     corners{end}.l1 = mapsize(1);
@@ -92,7 +92,9 @@ for i = 1:max(size(theta_list))
                     O1 = point + Rmin*[-sin(theta);cos(theta)];
                     O2 = point + Rmin*[sin(theta);-cos(theta)];
                     if point(1) <= mapsize(1) && point(2) <= mapsize(2) && point(1) >= 1 && point(2) >= 1
-                        if critical_points(lines{j}.p2(1),lines{j}.p2(2)) < 2
+                        if lines{j}.p2(1) > 0 && lines{j}.p2(1) < mapsize(1) + 1 && ...
+                                lines{j}.p2(2) > 0 && lines{j}.p2(2) < mapsize(2) + 1 && ... 
+                                critical_points(lines{j}.p2(1),lines{j}.p2(2)) < 2
                         if dot(lines{j}.tvec,(O1-lines{j}.p2)) < 0 && norm(O1-lines{j}.p2) > Rmin
                             continue;
                         end
@@ -101,7 +103,9 @@ for i = 1:max(size(theta_list))
                                 continue;
                             end
                         end
-                        if critical_points(lines{j}.p1(1),lines{j}.p1(2)) < 2
+                        if lines{j}.p1(1) > 0 && lines{j}.p1(1) < mapsize(1) + 1 && ...
+                                lines{j}.p1(2) > 0 && lines{j}.p1(2) < mapsize(2) + 1 && ... 
+                                critical_points(lines{j}.p1(1),lines{j}.p1(2)) < 2
                         if dot(lines{j}.tvec,(lines{j}.p1 - O2)) < 0 && norm(O2-lines{j}.p1) > Rmin
                             continue;
                         end
